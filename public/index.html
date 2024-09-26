@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee List</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    table, th, td {
+      border: 1px solid black;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    .total-salary {
+      font-weight: bold;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Employee List</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Department</th>
+        <th>Salary</th>
+        <th>City</th>
+      </tr>
+    </thead>
+    <tbody id="employeeTableBody">
+      <!-- Employee data will be inserted here -->
+    </tbody>
+  </table>
+
+  <p class="total-salary">Total Salary: $<span id="totalSalary">0</span></p>
+
+  <script>
+    async function fetchEmployees() {
+      try {
+        const response = await fetch('/employees');
+        const employees = await response.json();
+        const tableBody = document.getElementById('employeeTableBody');
+        let totalSalary = 0;
+
+        employees.forEach(employee => {
+          const row = document.createElement('tr');
+
+          const idCell = document.createElement('td');
+          idCell.textContent = employee.id;
+          row.appendChild(idCell);
+
+          const nameCell = document.createElement('td');
+          nameCell.textContent = employee.name;
+          row.appendChild(nameCell);
+
+          const departmentCell = document.createElement('td');
+          departmentCell.textContent = employee.department;
+          row.appendChild(departmentCell);
+
+          const salaryCell = document.createElement('td');
+          salaryCell.textContent = employee.salary;
+          row.appendChild(salaryCell);
+
+          const cityCell = document.createElement('td');
+          cityCell.textContent = employee.city;
+          row.appendChild(cityCell);
+
+          tableBody.appendChild(row);
+
+          totalSalary += employee.salary;
+        });
+
+        document.getElementById('totalSalary').textContent = totalSalary;
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+      }
+    }
+
+    fetchEmployees();
+  </script>
+</body>
+</html>
